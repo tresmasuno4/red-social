@@ -1,0 +1,1327 @@
+/* ==========================================================================
+   Órbita · Hoja de estilos
+
+   Las medidas y los colores salen de la referencia a 1440 × 900 px. Para
+   ajustar el diseño empieza por las variables de :root.
+
+   Índice
+     1. Variables
+     2. Base
+     3. Iconos y piezas comunes
+     4. Menú lateral
+     5. Distribución general
+     6. Historias
+     7. Publicaciones
+     8. Comentarios
+     9. Panel derecho
+    10. Menús emergentes
+    11. Mensajes flotante
+    12. Efectos hover
+    13. Animaciones
+    14. Tablets (hasta 1159 px)
+    15. Celulares (hasta 767 px)
+   ========================================================================== */
+
+
+/* 1. Variables
+   ========================================================================== */
+:root {
+  /* Colores */
+  --color-fondo: #ffffff;
+  --color-texto: #0c1014;
+  --color-texto-secundario: #6a717a;
+  --color-enlace: #4150f7;
+  --color-enlace-hover: #2f3bc4;
+  --color-enlace-cuenta: #3143e3;
+  --color-boton: #f0f2f5;
+  --color-boton-hover: #e4e7ec;
+  --color-marcador: #f3f5f7;
+  --color-separador: #dbdfe4;
+  --color-hover: rgba(12, 16, 20, 0.05);
+  --color-insignia: #ff3040;
+  --color-me-gusta: #ff3040;
+  --color-peligro: #ed4956;
+  --color-verificado: #0095f6;
+  --color-fondo-media: #0c1014;
+  --color-control-media: rgba(43, 48, 54, 0.8);
+  --color-sobre-media: #ffffff;
+  --color-separador-grueso: rgba(219, 219, 219, 0.3);
+  --color-separador-fino: rgba(219, 219, 219, 0.5);
+
+  /* Degradados */
+  --degradado-historia: linear-gradient(45deg, #ffc800 0%, #ffa100 15%, #ff5a1b 37%, #ff0169 63%, #de00ad 85%, #d300c5 100%);
+  --degradado-encabezado: linear-gradient(rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.3) 50%, rgba(0, 0, 0, 0) 100%);
+
+  /* Sombras: solo elementos flotantes */
+  --sombra-emergente: 0 4px 12px rgba(12, 16, 20, 0.15), 0 8px 48px rgba(0, 0, 0, 0.18);
+  --sombra-pildora: 0 4px 12px rgba(0, 0, 0, 0.2);
+
+  /* Tipografía */
+  --fuente: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  /* Menú lateral */
+  --menu-ancho: 72px;
+  --menu-ancho-abierto: 240px;
+  --menu-casilla: 56px;
+
+  /* Feed y panel */
+  --contenido-margen-izquierdo: 80px;
+  --feed-ancho: 470px;
+  --panel-ancho: 383px;
+  --panel-separacion: 80px;
+
+  /* Publicaciones */
+  --post-margen-x: 12px;
+  --post-espacio-final: 36px;
+  --radio-media: 6px;
+  --radio-boton: 8px;
+  --radio-emergente: 16px;
+
+  /* Historias */
+  --historia-foto: 66px;
+  --historia-ancho: 80px;
+
+  /* Celulares */
+  --barra-movil-alto: 45px;
+  --nav-movil-alto: 50px;
+
+  /* Movimiento */
+  --transicion: 0.15s ease-out;
+  --transicion-icono: 0.2s cubic-bezier(0.17, 0.17, 0, 1);
+}
+
+
+/* 2. Base
+   ========================================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  /* Reserva el canal de la barra de desplazamiento para que nada salte. */
+  overflow-y: scroll;
+}
+
+body {
+  margin: 0;
+  background: var(--color-fondo);
+  color: var(--color-texto);
+  font: 400 14px/18px var(--fuente);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input {
+  margin: 0;
+  color: inherit;
+  font: inherit;
+}
+
+button {
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+p,
+h2 {
+  margin: 0;
+}
+
+img {
+  display: block;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-enlace);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+
+/* 3. Iconos y piezas comunes
+   ========================================================================== */
+.sprite {
+  position: absolute;
+}
+
+.icono {
+  display: block;
+  flex: none;
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Un mismo <svg> guarda la versión de trazo y la activa; el estado decide cuál se ve. */
+.icono .relleno {
+  display: none;
+}
+
+[aria-pressed="true"] > .icono .trazo,
+[aria-current="page"] .icono .trazo {
+  display: none;
+}
+
+[aria-pressed="true"] > .icono .relleno,
+[aria-current="page"] .icono .relleno {
+  display: inline;
+}
+
+.verificado {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  vertical-align: -1px;
+}
+
+.insignia {
+  position: absolute;
+  top: 0;
+  right: -1px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-insignia);
+  box-shadow: 0 0 0 1.5px var(--color-fondo);
+}
+
+.avatar {
+  position: relative;
+  display: block;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--color-marcador);
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.avatar--44 {
+  width: 44px;
+  height: 44px;
+}
+
+/* Anillo de historia: se recorta con una máscara para que el hueco sea transparente. */
+.avatar--anillo::before {
+  content: "";
+  position: absolute;
+  inset: -3.5px;
+  border-radius: 50%;
+  background: var(--degradado-historia);
+  -webkit-mask: radial-gradient(closest-side, transparent calc(100% - 2px), #000 calc(100% - 1.5px));
+  mask: radial-gradient(closest-side, transparent calc(100% - 2px), #000 calc(100% - 1.5px));
+}
+
+
+/* 4. Menú lateral
+   ========================================================================== */
+.menu {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  width: var(--menu-ancho);
+  padding: 24px 12px;
+  background: var(--color-fondo);
+  transition: width 0.12s ease-out;
+}
+
+.menu__logo {
+  display: flex;
+  flex: none;
+  align-items: center;
+  width: 48px;
+  height: var(--menu-casilla);
+  padding-left: 12px;
+  border-radius: var(--radio-boton);
+}
+
+.menu__lista {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 0;
+}
+
+.menu__item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  height: 48px;
+  margin: 4px 0;
+  padding: 12px;
+  border-radius: var(--radio-boton);
+  text-align: left;
+  transition: background-color 0.1s cubic-bezier(0.33, 0.33, 0.33, 1);
+}
+
+.menu__icono {
+  position: relative;
+  display: block;
+  flex: none;
+  width: 24px;
+  height: 24px;
+  transition: transform var(--transicion-icono);
+}
+
+.menu__texto {
+  font-size: 16px;
+  line-height: 20px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.1s ease-out;
+}
+
+.menu__item[aria-current="page"] .menu__texto {
+  font-weight: 700;
+}
+
+.menu__avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.menu__item[aria-current="page"] .menu__avatar {
+  outline: 2px solid var(--color-texto);
+  outline-offset: 1px;
+}
+
+.menu__pie {
+  flex: none;
+  width: 100%;
+}
+
+
+/* 5. Distribución general
+   ========================================================================== */
+.barra-movil {
+  display: none; /* Solo aparece en celulares. */
+}
+
+.contenido {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-left: var(--contenido-margen-izquierdo);
+}
+
+.feed {
+  flex: none;
+  width: var(--feed-ancho);
+  min-width: 0;
+  padding-top: 24px;
+}
+
+
+/* 6. Historias
+   ========================================================================== */
+.historias {
+  position: relative;
+  margin-bottom: 24px;
+}
+
+.historias__lista {
+  display: flex;
+  padding: 4px 0;
+  overflow-x: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.historias__lista::-webkit-scrollbar {
+  display: none;
+}
+
+.historia {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: var(--historia-ancho);
+}
+
+.historia__anillo {
+  position: relative;
+  display: block;
+  width: calc(var(--historia-foto) + 8px);
+  height: calc(var(--historia-foto) + 8px);
+  padding: 4px;
+  transition: transform var(--transicion-icono);
+}
+
+/* Dos anillos superpuestos para fundir el degradado con el gris de "vista". */
+.historia__anillo::before,
+.historia__anillo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  -webkit-mask: radial-gradient(closest-side, transparent calc(100% - 2.5px), #000 calc(100% - 2px));
+  mask: radial-gradient(closest-side, transparent calc(100% - 2.5px), #000 calc(100% - 2px));
+  transition: opacity 0.4s ease-out;
+}
+
+.historia__anillo::before {
+  background: var(--degradado-historia);
+}
+
+.historia__anillo::after {
+  background: var(--color-separador);
+  opacity: 0;
+}
+
+.historia__anillo img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.historia__nombre {
+  width: 100%;
+  overflow: hidden;
+  padding: 0 3px;
+  font-size: 12px;
+  line-height: 16px;
+  text-align: center;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.historia--vista .historia__anillo::before {
+  opacity: 0;
+}
+
+.historia--vista .historia__anillo::after {
+  opacity: 1;
+}
+
+.historia--vista .historia__nombre {
+  color: var(--color-texto-secundario);
+}
+
+.historias__flecha {
+  position: absolute;
+  top: 29px;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--color-control-media);
+  color: var(--color-sobre-media);
+  transition: background-color var(--transicion), transform var(--transicion);
+}
+
+.historias__flecha[hidden] {
+  display: none;
+}
+
+.historias__flecha .icono {
+  width: 12px;
+  height: 12px;
+}
+
+.historias__flecha--izquierda {
+  left: 4px;
+}
+
+.historias__flecha--derecha {
+  right: 4px;
+}
+
+
+/* 7. Publicaciones
+   ========================================================================== */
+.post {
+  position: relative;
+  padding-bottom: var(--post-espacio-final);
+}
+
+.post__encabezado {
+  display: flex;
+  align-items: center;
+  min-height: 32px;
+  margin-bottom: 12px;
+  padding: 0 10px 0 14px;
+}
+
+.post__autor {
+  flex: 1;
+  min-width: 0;
+  margin: -1px 8px -1px 12px;
+}
+
+.post__linea {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.post__usuario {
+  font-weight: 600;
+}
+
+.post__linea .post__usuario {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.post__punto,
+.post__tiempo {
+  flex: none;
+  color: var(--color-texto-secundario);
+}
+
+.post__ubicacion {
+  display: block;
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 16px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.boton-seguir {
+  flex: none;
+  height: 32px;
+  margin-right: 8px;
+  padding: 0 16px;
+  border-radius: var(--radio-boton);
+  background: var(--color-boton);
+  font-weight: 600;
+  transition: background-color var(--transicion), transform var(--transicion);
+}
+
+.boton-icono {
+  display: block;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  transition: opacity var(--transicion), transform var(--transicion);
+}
+
+.post__media {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--color-separador);
+  border-radius: var(--radio-media);
+  background: var(--color-fondo-media);
+}
+
+.post__media img {
+  width: 100%;
+  height: auto;
+}
+
+.post__cuerpo {
+  padding: 12px var(--post-margen-x) 0;
+}
+
+.post__acciones {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 24px;
+  margin-bottom: 12px;
+}
+
+.accion {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 6px;
+  border-radius: 4px;
+  font-weight: 600;
+  transition: color var(--transicion), transform var(--transicion);
+}
+
+.accion--guardar {
+  margin-left: auto;
+}
+
+.accion--like[aria-pressed="true"] .icono {
+  color: var(--color-me-gusta);
+}
+
+.accion__cantidad {
+  color: var(--color-texto);
+}
+
+.post__leyenda {
+  overflow-wrap: anywhere;
+}
+
+.post__mas {
+  color: var(--color-texto-secundario);
+}
+
+.post__ver-comentarios {
+  display: block;
+  width: fit-content;
+  margin-top: 8px;
+  color: var(--color-texto-secundario);
+}
+
+/* Variante vídeo: encabezado sobre la imagen, como en la referencia. */
+.post--superpuesto .post__encabezado {
+  position: absolute;
+  top: 10px;
+  right: 0;
+  left: 0;
+  z-index: 2;
+  margin: 0;
+  padding: 0 11px 0 15px;
+  color: var(--color-sobre-media);
+}
+
+.post--superpuesto .post__punto,
+.post--superpuesto .post__tiempo {
+  color: var(--color-sobre-media);
+}
+
+.post--superpuesto .post__media::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 62px;
+  background: var(--degradado-encabezado);
+  pointer-events: none;
+}
+
+.post--superpuesto .boton-seguir {
+  padding: 0;
+  background: none;
+}
+
+.post__silencio {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 16px;
+  background: var(--color-control-media);
+  color: var(--color-sobre-media);
+}
+
+.post__silencio .icono {
+  width: 12px;
+  height: 12px;
+}
+
+
+/* 8. Comentarios
+   ========================================================================== */
+.comentarios {
+  margin-top: 4px;
+}
+
+.comentario {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 2px 0;
+}
+
+.comentario__texto {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.comentario__like {
+  flex: none;
+  padding: 3px 0;
+  transition: opacity var(--transicion), transform var(--transicion);
+}
+
+.comentario__like .icono {
+  width: 12px;
+  height: 12px;
+  stroke-width: 2.4;
+}
+
+.comentario__like[aria-pressed="true"] .icono {
+  color: var(--color-me-gusta);
+}
+
+.comentar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.comentar__campo {
+  flex: 1;
+  min-width: 0;
+  padding: 4px 0;
+  border: 0;
+  outline: 0;
+  background: none;
+}
+
+.comentar__campo::placeholder {
+  color: var(--color-texto-secundario);
+  opacity: 1;
+}
+
+.comentar__enviar {
+  flex: none;
+  color: var(--color-enlace);
+  font-weight: 600;
+  transition: color var(--transicion), opacity var(--transicion);
+}
+
+.comentar__enviar:disabled {
+  cursor: default;
+  opacity: 0.4;
+}
+
+
+/* 9. Panel derecho
+   ========================================================================== */
+.panel {
+  flex: none;
+  width: var(--panel-ancho);
+  margin-left: var(--panel-separacion);
+  padding: 36px 16px 32px 80px;
+}
+
+.panel__cuenta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.panel__datos {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.panel__usuario {
+  overflow: hidden;
+  font-weight: 600;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.panel__nombre {
+  overflow: hidden;
+  color: var(--color-texto-secundario);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.panel__cambiar {
+  flex: none;
+  border-radius: 2px;
+  color: var(--color-enlace-cuenta);
+  font-size: 12px;
+  font-weight: 500;
+  transition: color var(--transicion);
+}
+
+.panel__titulo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 9px;
+}
+
+.panel__titulo h2 {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 18px;
+}
+
+.panel__titulo a {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  transition: opacity var(--transicion);
+}
+
+.sugerencia {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0 8px 4px;
+}
+
+.sugerencia__linea {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.sugerencia__motivo {
+  color: var(--color-texto-secundario);
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.sugerencia__seguir {
+  flex: none;
+  color: var(--color-enlace);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 16px;
+  transition: color var(--transicion);
+}
+
+.sugerencia__seguir[aria-pressed="true"] {
+  color: var(--color-texto-secundario);
+}
+
+.panel__pie {
+  margin-top: 32px;
+  color: var(--color-texto-secundario);
+  font-size: 12px;
+  line-height: 19.6px;
+}
+
+.panel__pie nav {
+  padding: 1.5px 0;
+}
+
+.panel__pie a {
+  transition: color var(--transicion);
+}
+
+.panel__pie p {
+  margin-top: 16px;
+  line-height: 16px;
+}
+
+
+/* 10. Menús emergentes
+   ========================================================================== */
+.desplegable {
+  position: relative;
+  display: flex;
+  flex: none;
+}
+
+.emergente {
+  position: absolute;
+  z-index: 30;
+  width: 266px;
+  padding: 8px 0;
+  overflow: hidden;
+  border-radius: var(--radio-emergente);
+  background: var(--color-fondo);
+  box-shadow: var(--sombra-emergente);
+  color: var(--color-texto);
+  animation: emergente-aparece 0.14s ease-out;
+}
+
+.emergente[hidden] {
+  display: none;
+}
+
+.emergente--post {
+  top: 100%;
+  left: 0;
+}
+
+.emergente--compartir {
+  bottom: calc(100% + 8px);
+  left: 0;
+}
+
+.emergente--mas {
+  bottom: 100%;
+  left: 0;
+  max-height: calc(100vh - 80px);
+  padding: 16px 0;
+  overflow-y: auto;
+}
+
+.emergente__grupo {
+  padding: 8px;
+}
+
+.emergente__item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 50px;
+  padding: 16px;
+  text-align: left;
+  transition: background-color var(--transicion);
+}
+
+.emergente__item .icono {
+  width: 18px;
+  height: 18px;
+}
+
+.emergente__grupo .emergente__item {
+  border-radius: var(--radio-boton);
+}
+
+.emergente__item--peligro {
+  color: var(--color-peligro);
+}
+
+.emergente__separador {
+  height: 6px;
+  background: var(--color-separador-grueso);
+}
+
+.emergente__separador--fino {
+  height: 1px;
+  background: var(--color-separador-fino);
+}
+
+.emergente--mas .emergente__grupo {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.emergente--mas .emergente__separador {
+  margin: 8px 0;
+}
+
+
+/* 11. Mensajes flotante
+   ========================================================================== */
+.pildora-mensajes {
+  position: fixed;
+  right: 32px;
+  bottom: 32px;
+  z-index: 9;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 251px;
+  height: 56px;
+  padding: 0 16px;
+  border-radius: 44px;
+  background: var(--color-fondo);
+  box-shadow: var(--sombra-pildora);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 20px;
+  transition: background-color var(--transicion), transform var(--transicion);
+}
+
+
+/* 12. Efectos hover
+   Solo en dispositivos con puntero, para que no se queden fijos al tocar.
+   ========================================================================== */
+@media (hover: hover) {
+  .menu__item:hover {
+    background: var(--color-hover);
+  }
+
+  .menu__item:hover .menu__icono {
+    transform: scale(1.06);
+  }
+
+  .menu__logo:hover {
+    background: var(--color-hover);
+  }
+
+  .barra-movil__boton:hover {
+    opacity: 0.6;
+  }
+
+  .historia:hover .historia__anillo {
+    transform: scale(1.05);
+  }
+
+  .historias__flecha:hover {
+    background: rgba(43, 48, 54, 0.95);
+    transform: scale(1.08);
+  }
+
+  .boton-seguir:hover {
+    background: var(--color-boton-hover);
+  }
+
+  .post--superpuesto .boton-seguir:hover {
+    background: none;
+    opacity: 0.75;
+  }
+
+  .boton-icono:hover,
+  .comentario__like:hover {
+    opacity: 0.55;
+  }
+
+  .accion:hover {
+    color: var(--color-texto-secundario);
+  }
+
+  .accion--like[aria-pressed="true"]:hover .icono {
+    color: var(--color-me-gusta);
+  }
+
+  .post__usuario:hover,
+  .post__ubicacion:hover,
+  .post__ver-comentarios:hover,
+  .panel__usuario:hover,
+  .panel__pie a:hover {
+    text-decoration: underline;
+  }
+
+  .post__mas:hover {
+    color: var(--color-texto);
+  }
+
+  .comentar__enviar:not(:disabled):hover,
+  .sugerencia__seguir:hover {
+    color: var(--color-enlace-hover);
+  }
+
+  .panel__cambiar:hover {
+    color: var(--color-enlace-hover);
+  }
+
+  .panel__titulo a:hover {
+    opacity: 0.55;
+  }
+
+  .emergente__item:hover {
+    background: var(--color-hover);
+  }
+
+  .pildora-mensajes:hover {
+    background: var(--color-marcador);
+    transform: translateY(-1px);
+  }
+
+  /* El menú se despliega con sus textos solo cuando hay sitio para el panel. */
+  @media (min-width: 1160px) {
+    .menu:hover {
+      width: var(--menu-ancho-abierto);
+    }
+
+    .menu:hover .menu__texto {
+      opacity: 1;
+    }
+  }
+}
+
+/* También se despliega al llegar con el teclado. */
+@media (min-width: 1160px) {
+  .menu:has(.menu__lista :focus-visible),
+  .menu:has(.menu__pie > .menu__item:focus-visible) {
+    width: var(--menu-ancho-abierto);
+  }
+
+  .menu:has(.menu__lista :focus-visible) .menu__texto,
+  .menu:has(.menu__pie > .menu__item:focus-visible) .menu__texto {
+    opacity: 1;
+  }
+}
+
+/* Respuesta al pulsar, común a ratón y pantalla táctil. */
+.menu__item:active .menu__icono,
+.accion:active,
+.boton-icono:active,
+.comentario__like:active,
+.boton-seguir:active,
+.pildora-mensajes:active,
+.historias__flecha:active {
+  transform: scale(0.94);
+}
+
+.historia:active .historia__anillo {
+  transform: scale(0.95);
+}
+
+
+/* 13. Animaciones
+   ========================================================================== */
+@keyframes latido {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(1.28); }
+  65%  { transform: scale(0.94); }
+  100% { transform: scale(1); }
+}
+
+@keyframes emergente-aparece {
+  from { opacity: 0; transform: translateY(4px) scale(0.98); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes comentario-aparece {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes historia-gira {
+  from { transform: rotate(0); }
+  to   { transform: rotate(360deg); }
+}
+
+.latido .icono {
+  animation: latido 0.38s ease-out;
+}
+
+.comentario--nuevo {
+  animation: comentario-aparece 0.22s ease-out;
+}
+
+.historia--abriendo .historia__anillo::before {
+  animation: historia-gira 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+
+/* 14. Tablets (hasta 1159 px)
+   Menú compacto de iconos, sin panel derecho y feed centrado.
+   ========================================================================== */
+@media (max-width: 1159px) {
+  .contenido {
+    padding-left: 0;
+  }
+
+  .feed {
+    width: min(var(--feed-ancho), calc(100% - 2 * var(--menu-ancho) - 32px));
+  }
+
+  .panel {
+    display: none;
+  }
+
+  .emergente--post {
+    right: 0;
+    left: auto;
+  }
+}
+
+/* Pantallas bajas: las casillas del menú se aprietan para que quepan todas. */
+@media (min-width: 768px) and (max-height: 660px) {
+  .menu {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  .menu__logo {
+    height: 44px;
+  }
+
+  .menu__item {
+    margin: 0;
+    height: 44px;
+    padding: 10px 12px;
+  }
+}
+
+@media (min-width: 768px) and (max-height: 470px) {
+  .menu__logo {
+    height: 36px;
+  }
+
+  .menu__item {
+    height: 36px;
+    padding: 6px 12px;
+  }
+}
+
+
+/* 15. Celulares (hasta 767 px)
+   Barra superior, navegación inferior y feed a todo el ancho.
+   ========================================================================== */
+@media (max-width: 767px) {
+  html {
+    overflow-y: auto;
+  }
+
+  body {
+    padding-bottom: calc(var(--nav-movil-alto) + env(safe-area-inset-bottom));
+  }
+
+  /* Barra superior */
+  .barra-movil {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: var(--barra-movil-alto);
+    padding: 0 16px;
+    background: var(--color-fondo);
+  }
+
+  .barra-movil__marca {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .barra-movil__flecha {
+    width: 12px;
+    height: 12px;
+  }
+
+  .barra-movil__acciones {
+    display: flex;
+    gap: 16px;
+  }
+
+  .barra-movil__boton {
+    position: relative;
+    display: block;
+    transition: opacity var(--transicion);
+  }
+
+  /* El menú lateral pasa a ser la barra inferior */
+  .menu {
+    top: auto;
+    right: 0;
+    bottom: 0;
+    flex-direction: row;
+    width: 100%;
+    height: calc(var(--nav-movil-alto) + env(safe-area-inset-bottom));
+    padding: 0 0 env(safe-area-inset-bottom);
+    border-top: 1px solid var(--color-separador);
+  }
+
+  .menu__logo,
+  .menu__pie,
+  .menu__solo-lateral,
+  .menu__texto {
+    display: none;
+  }
+
+  .menu__lista {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 100%;
+  }
+
+  .menu__item {
+    width: 48px;
+    height: 48px;
+    margin: 0;
+    padding: 12px;
+  }
+
+  /* Contenido */
+  .contenido {
+    display: block;
+  }
+
+  .feed {
+    width: 100%;
+    padding-top: 0;
+  }
+
+  .historias {
+    margin-bottom: 12px;
+    padding: 4px 0 8px;
+  }
+
+  .historias__lista {
+    padding-right: 4px;
+    padding-left: 4px;
+  }
+
+  .pildora-mensajes {
+    display: none;
+  }
+
+  /* Publicaciones de borde a borde */
+  :root {
+    --post-margen-x: 16px;
+    --post-espacio-final: 24px;
+  }
+
+  .post__media {
+    border: 0;
+    border-radius: 0;
+  }
+
+  .post__encabezado {
+    padding: 0 12px;
+  }
+
+  .post--superpuesto .post__encabezado {
+    padding: 0 12px;
+  }
+
+  /* El menú de compartir se ancla a la fila de iconos para no salirse de la pantalla. */
+  .post__acciones {
+    position: relative;
+  }
+
+  .post__acciones .desplegable {
+    position: static;
+  }
+
+  /* 16 px evita que iOS acerque la página al enfocar el campo. */
+  .comentar__campo {
+    font-size: 16px;
+  }
+}
+
+/* En pantallas táctiles las historias se deslizan con el dedo: las flechas sobran. */
+@media (hover: none) {
+  .historias__flecha {
+    display: none;
+  }
+}

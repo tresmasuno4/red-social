@@ -1,0 +1,770 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Órbita</title>
+  <meta name="description" content="Interfaz de demostración de una red social ficticia. Todo el contenido es inventado.">
+  <link rel="icon" href="assets/iconos/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- =====================================================================
+       ICONOS
+       Van dentro del HTML porque <use> no puede leer archivos .svg externos
+       al abrir la página con doble clic (file://). Las mismas formas están
+       como archivos sueltos en assets/iconos/ para editarlas o reutilizarlas.
+       Si cambias un icono aquí, cámbialo también allí.
+       ===================================================================== -->
+  <svg class="sprite" width="0" height="0" aria-hidden="true" focusable="false">
+    <!-- Marca -->
+    <symbol id="i-logo" viewBox="0 0 24 24">
+      <path d="M19.94 8.51A9.2 9.2 0 1 1 15.49 4.06"/>
+      <circle cx="11.6" cy="12.4" r="3.5" fill="currentColor" stroke="none"/>
+      <circle cx="18.3" cy="5.7" r="2.2" fill="currentColor" stroke="none"/>
+    </symbol>
+
+    <!-- Navegación: versión de trazo y versión seleccionada -->
+    <symbol id="i-inicio" viewBox="0 0 24 24">
+      <path d="M3.5 10.5 12 3.2l8.5 7.3V19a2 2 0 0 1-2 2H15v-5.5a3 3 0 0 0-6 0V21H5.5a2 2 0 0 1-2-2Z"/>
+    </symbol>
+    <symbol id="i-inicio-activo" viewBox="0 0 24 24">
+      <path fill="currentColor" d="M3.5 10.5 12 3.2l8.5 7.3V19a2 2 0 0 1-2 2H15v-5.5a3 3 0 0 0-6 0V21H5.5a2 2 0 0 1-2-2Z"/>
+    </symbol>
+    <symbol id="i-buscar" viewBox="0 0 24 24">
+      <circle cx="10.5" cy="10.5" r="7.5"/>
+      <path d="m16.2 16.2 5.3 5.3"/>
+    </symbol>
+    <symbol id="i-buscar-activo" viewBox="0 0 24 24">
+      <circle cx="10.5" cy="10.5" r="7.5" stroke-width="3"/>
+      <path d="m16.2 16.2 5.3 5.3" stroke-width="3"/>
+    </symbol>
+    <symbol id="i-explorar" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9.5"/>
+      <path d="m15.8 8.2-2.4 5.2-5.2 2.4 2.4-5.2Z"/>
+    </symbol>
+    <symbol id="i-explorar-activo" viewBox="0 0 24 24">
+      <path fill="currentColor" stroke="none" fill-rule="evenodd" d="M12 1.5a10.5 10.5 0 1 0 0 21 10.5 10.5 0 0 0 0-21Zm4.9 5.6-3 6.8-6.8 3 3-6.8Z"/>
+    </symbol>
+    <symbol id="i-reels" viewBox="0 0 24 24">
+      <rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/>
+      <path d="M10 8.3v7.4l6-3.7Z"/>
+    </symbol>
+    <symbol id="i-reels-activo" viewBox="0 0 24 24">
+      <path fill="currentColor" stroke="none" fill-rule="evenodd" d="M8 1.5h8A6.5 6.5 0 0 1 22.5 8v8a6.5 6.5 0 0 1-6.5 6.5H8A6.5 6.5 0 0 1 1.5 16V8A6.5 6.5 0 0 1 8 1.5Zm1.5 6.1v8.8l7-4.4Z"/>
+    </symbol>
+    <symbol id="i-mensajes" viewBox="0 0 24 24">
+      <path d="M21.6 3.4 2.6 9.5a.6.6 0 0 0-.1 1.1l7.4 3.4 3.5 7.4a.6.6 0 0 0 1.1-.1Z"/>
+      <path d="m9.9 14 11.7-10.6"/>
+    </symbol>
+    <symbol id="i-mensajes-activo" viewBox="0 0 24 24">
+      <path fill="currentColor" d="M21.6 3.4 2.6 9.5a.6.6 0 0 0-.1 1.1l7.4 3.4 3.5 7.4a.6.6 0 0 0 1.1-.1Z"/>
+    </symbol>
+    <symbol id="i-corazon" viewBox="0 0 24 24">
+      <path d="M12 20.6c-.5 0-8.9-5.2-8.9-11.2a5 5 0 0 1 8.9-3.2 5 5 0 0 1 8.9 3.2c0 6-8.4 11.2-8.9 11.2Z"/>
+    </symbol>
+    <symbol id="i-corazon-activo" viewBox="0 0 24 24">
+      <path fill="currentColor" d="M12 20.6c-.5 0-8.9-5.2-8.9-11.2a5 5 0 0 1 8.9-3.2 5 5 0 0 1 8.9 3.2c0 6-8.4 11.2-8.9 11.2Z"/>
+    </symbol>
+    <symbol id="i-crear" viewBox="0 0 24 24">
+      <path d="M12 3v18M3 12h18"/>
+    </symbol>
+    <symbol id="i-crear-activo" viewBox="0 0 24 24">
+      <path d="M12 3v18M3 12h18" stroke-width="3"/>
+    </symbol>
+
+    <!-- Acciones de cada publicación -->
+    <symbol id="i-comentar" viewBox="0 0 24 24">
+      <path d="M20.6 16A9.5 9.5 0 1 0 16 20.6l5.5.9Z"/>
+    </symbol>
+    <symbol id="i-repostear" viewBox="0 0 24 24">
+      <path d="m17 2.5 4 4-4 4"/>
+      <path d="M21 6.5H8A4.5 4.5 0 0 0 3.5 11v1"/>
+      <path d="m7 21.5-4-4 4-4"/>
+      <path d="M3 17.5h13a4.5 4.5 0 0 0 4.5-4.5v-1"/>
+    </symbol>
+    <symbol id="i-guardar" viewBox="0 0 24 24">
+      <path d="M19.5 21.5 12 14.8l-7.5 6.7V4A1.5 1.5 0 0 1 6 2.5h12A1.5 1.5 0 0 1 19.5 4Z"/>
+    </symbol>
+    <symbol id="i-guardar-activo" viewBox="0 0 24 24">
+      <path fill="currentColor" d="M19.5 21.5 12 14.8l-7.5 6.7V4A1.5 1.5 0 0 1 6 2.5h12A1.5 1.5 0 0 1 19.5 4Z"/>
+    </symbol>
+    <symbol id="i-opciones" viewBox="0 0 24 24">
+      <circle cx="5.5" cy="12" r="1.6" fill="currentColor" stroke="none"/>
+      <circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/>
+      <circle cx="18.5" cy="12" r="1.6" fill="currentColor" stroke="none"/>
+    </symbol>
+    <symbol id="i-verificado" viewBox="0 0 24 24">
+      <path style="fill:var(--color-verificado,#0095f6)" stroke="none" d="m12 1.3 2.8 2 3.4-.3 1.2 3.2 2.8 2-1.1 3.3 1.1 3.3-2.8 2-1.2 3.2-3.4-.3-2.8 2-2.8-2-3.4.3-1.2-3.2-2.8-2 1.1-3.3-1.1-3.3 2.8-2 1.2-3.2 3.4.3Z"/>
+      <path stroke="#fff" stroke-width="2.2" d="m7.8 12.2 2.9 2.9 5.5-5.7"/>
+    </symbol>
+    <symbol id="i-silencio" viewBox="0 0 24 24">
+      <path fill="currentColor" stroke="none" d="M2.5 9v6h4l5.5 4.5v-15L6.5 9Z"/>
+      <path stroke-width="2.4" d="m15.5 9.5 5.5 5.5m0-5.5-5.5 5.5"/>
+    </symbol>
+
+    <!-- Controles varios -->
+    <symbol id="i-menu" viewBox="0 0 24 24">
+      <path d="M3 4h18M3 12h18M3 20h18"/>
+    </symbol>
+    <symbol id="i-flecha-abajo" viewBox="0 0 24 24">
+      <path stroke-width="3" d="m4.5 8.5 7.5 7.5 7.5-7.5"/>
+    </symbol>
+    <symbol id="i-flecha-izquierda" viewBox="0 0 24 24">
+      <path stroke-width="3" d="m15 5-7 7 7 7"/>
+    </symbol>
+    <symbol id="i-flecha-derecha" viewBox="0 0 24 24">
+      <path stroke-width="3" d="m9 5 7 7-7 7"/>
+    </symbol>
+
+    <!-- Menú "Más" -->
+    <symbol id="i-ajustes" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="3"/>
+      <path d="m12 2.5 1.6 2.8 3.2-.7.7 3.2 2.8 1.6-1.6 2.6 1.6 2.6-2.8 1.6-.7 3.2-3.2-.7-1.6 2.8-1.6-2.8-3.2.7-.7-3.2-2.8-1.6 1.6-2.6-1.6-2.6 2.8-1.6.7-3.2 3.2.7Z"/>
+    </symbol>
+    <symbol id="i-actividad" viewBox="0 0 24 24">
+      <rect x="3" y="3" width="18" height="18" rx="4"/>
+      <path d="m7.5 12.5 3 3 6-6.5"/>
+    </symbol>
+    <symbol id="i-apariencia" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="4"/>
+      <path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/>
+    </symbol>
+    <symbol id="i-reportar" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9.5"/>
+      <path d="M12 7v6"/>
+      <circle cx="12" cy="16.5" r="1.2" fill="currentColor" stroke="none"/>
+    </symbol>
+  </svg>
+
+
+  <!-- =====================================================================
+       BARRA SUPERIOR (solo en celulares)
+       ===================================================================== -->
+  <header class="barra-movil">
+    <a class="barra-movil__marca" href="#" aria-label="Órbita, ir al inicio">
+      <img src="assets/iconos/logotipo.svg" alt="" width="84" height="26">
+      <svg class="barra-movil__flecha icono"><use href="#i-flecha-abajo"/></svg>
+    </a>
+    <div class="barra-movil__acciones">
+      <a class="barra-movil__boton" href="#" data-nav="crear" aria-label="Crear">
+        <svg class="icono"><use class="trazo" href="#i-crear"/><use class="relleno" href="#i-crear-activo"/></svg>
+      </a>
+      <a class="barra-movil__boton" href="#" data-nav="notificaciones" aria-label="Notificaciones">
+        <svg class="icono"><use class="trazo" href="#i-corazon"/><use class="relleno" href="#i-corazon-activo"/></svg>
+        <span class="insignia"></span>
+      </a>
+    </div>
+  </header>
+
+
+  <!-- =====================================================================
+       A. MENÚ LATERAL (en celulares se convierte en la barra inferior)
+       ===================================================================== -->
+  <nav class="menu" aria-label="Navegación principal">
+    <a class="menu__logo" href="#" aria-label="Órbita, ir al inicio">
+      <svg class="icono"><use href="#i-logo"/></svg>
+    </a>
+
+    <ul class="menu__lista">
+      <li>
+        <a class="menu__item" href="#" data-nav="inicio" aria-current="page" title="Inicio">
+          <span class="menu__icono"><svg class="icono"><use class="trazo" href="#i-inicio"/><use class="relleno" href="#i-inicio-activo"/></svg></span>
+          <span class="menu__texto">Inicio</span>
+        </a>
+      </li>
+      <li>
+        <a class="menu__item" href="#" data-nav="buscar" title="Buscar">
+          <span class="menu__icono"><svg class="icono"><use class="trazo" href="#i-buscar"/><use class="relleno" href="#i-buscar-activo"/></svg></span>
+          <span class="menu__texto">Buscar</span>
+        </a>
+      </li>
+      <li class="menu__solo-lateral">
+        <a class="menu__item" href="#" data-nav="explorar" title="Explorar">
+          <span class="menu__icono"><svg class="icono"><use class="trazo" href="#i-explorar"/><use class="relleno" href="#i-explorar-activo"/></svg></span>
+          <span class="menu__texto">Explorar</span>
+        </a>
+      </li>
+      <li>
+        <a class="menu__item" href="#" data-nav="reels" title="Reels">
+          <span class="menu__icono"><svg class="icono"><use class="trazo" href="#i-reels"/><use class="relleno" href="#i-reels-activo"/></svg></span>
+          <span class="menu__texto">Reels</span>
+        </a>
+      </li>
+      <li>
+        <a class="menu__item" href="#" data-nav="mensajes" title="Mensajes">
+          <span class="menu__icono"><svg class="icono"><use class="trazo" href="#i-mensajes"/><use class="relleno" href="#i-mensajes-activo"/></svg></span>
+          <span class="menu__texto">Mensajes</span>
+        </a>
+      </li>
+      <li class="menu__solo-lateral">
+        <a class="menu__item" href="#" data-nav="notificaciones" title="Notificaciones">
+          <span class="menu__icono">
+            <svg class="icono"><use class="trazo" href="#i-corazon"/><use class="relleno" href="#i-corazon-activo"/></svg>
+            <span class="insignia"></span>
+          </span>
+          <span class="menu__texto">Notificaciones</span>
+        </a>
+      </li>
+      <li class="menu__solo-lateral">
+        <a class="menu__item" href="#" data-nav="crear" title="Crear">
+          <span class="menu__icono"><svg class="icono"><use class="trazo" href="#i-crear"/><use class="relleno" href="#i-crear-activo"/></svg></span>
+          <span class="menu__texto">Crear</span>
+        </a>
+      </li>
+      <li>
+        <a class="menu__item" href="#" data-nav="perfil" title="Perfil">
+          <span class="menu__icono"><img class="menu__avatar" src="assets/imagenes/avatar-sofia.jpg" alt="" width="24" height="24"></span>
+          <span class="menu__texto">Perfil</span>
+        </a>
+      </li>
+    </ul>
+
+    <!-- Opción "Más" con su menú emergente -->
+    <div class="menu__pie desplegable">
+      <button class="menu__item" type="button" data-menu aria-haspopup="menu" aria-expanded="false" title="Más">
+        <span class="menu__icono"><svg class="icono"><use href="#i-menu"/></svg></span>
+        <span class="menu__texto">Más</span>
+      </button>
+      <div class="emergente emergente--mas" role="menu" hidden>
+        <div class="emergente__grupo" role="none">
+          <button class="emergente__item" type="button" role="menuitem"><svg class="icono"><use href="#i-ajustes"/></svg>Configuración</button>
+          <button class="emergente__item" type="button" role="menuitem"><svg class="icono"><use href="#i-actividad"/></svg>Tu actividad</button>
+          <button class="emergente__item" type="button" role="menuitem"><svg class="icono"><use href="#i-guardar"/></svg>Guardado</button>
+          <button class="emergente__item" type="button" role="menuitem"><svg class="icono"><use href="#i-apariencia"/></svg>Cambiar apariencia</button>
+          <button class="emergente__item" type="button" role="menuitem"><svg class="icono"><use href="#i-reportar"/></svg>Reportar un problema</button>
+        </div>
+        <div class="emergente__separador" role="separator"></div>
+        <div class="emergente__grupo" role="none">
+          <button class="emergente__item" type="button" role="menuitem">Cambiar de cuenta</button>
+        </div>
+        <div class="emergente__separador emergente__separador--fino" role="separator"></div>
+        <div class="emergente__grupo" role="none">
+          <button class="emergente__item" type="button" role="menuitem">Salir</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+
+  <main class="contenido">
+    <div class="feed">
+
+      <!-- =================================================================
+           B. HISTORIAS
+           ================================================================= -->
+      <section class="historias" aria-label="Historias">
+        <div class="historias__lista">
+          <button class="historia" type="button"><span class="historia__anillo"><img src="assets/imagenes/avatar-mateo.jpg" alt="" width="66" height="66"></span><span class="historia__nombre">mateo.viaja</span></button>
+          <button class="historia" type="button"><span class="historia__anillo"><img src="assets/imagenes/avatar-valeria.jpg" alt="" width="66" height="66"></span><span class="historia__nombre">valeria.ruiz</span></button>
+          <button class="historia" type="button"><span class="historia__anillo"><img src="assets/imagenes/avatar-andes.jpg" alt="" width="66" height="66"></span><span class="historia__nombre">andes.trek</span></button>
+          <button class="historia" type="button"><span class="historia__anillo"><img src="assets/imagenes/avatar-nico.jpg" alt="" width="66" height="66"></span><span class="historia__nombre">nico_foto</span></button>
+          <button class="historia" type="button"><span class="historia__anillo"><img src="assets/imagenes/avatar-cafe.jpg" alt="" width="66" height="66"></span><span class="historia__nombre">cafe.altura</span></button>
+          <button class="historia" type="button"><span class="historia__anillo"><img src="assets/imagenes/avatar-camila.jpg" alt="" width="66" height="66"></span><span class="historia__nombre">camila.corre</span></button>
+          <button class="historia" type="button"><span class="historia__anillo"><img src="assets/imagenes/avatar-marina.jpg" alt="" width="66" height="66"></span><span class="historia__nombre">marina.azul</span></button>
+          <button class="historia" type="button"><span class="historia__anillo"><img src="assets/imagenes/avatar-tomas.jpg" alt="" width="66" height="66"></span><span class="historia__nombre">tomas.dibuja</span></button>
+          <button class="historia" type="button"><span class="historia__anillo"><img src="assets/imagenes/avatar-noche.jpg" alt="" width="66" height="66"></span><span class="historia__nombre">noche.clara</span></button>
+          <button class="historia" type="button"><span class="historia__anillo"><img src="assets/imagenes/avatar-dunas.jpg" alt="" width="66" height="66"></span><span class="historia__nombre">dunas_y_sal</span></button>
+          <button class="historia" type="button"><span class="historia__anillo"><img src="assets/imagenes/avatar-bosque.jpg" alt="" width="66" height="66"></span><span class="historia__nombre">bosque.lento</span></button>
+          <button class="historia" type="button"><span class="historia__anillo"><img src="assets/imagenes/avatar-lluvia.jpg" alt="" width="66" height="66"></span><span class="historia__nombre">lluvia.urbana</span></button>
+        </div>
+        <button class="historias__flecha historias__flecha--izquierda" type="button" aria-label="Ver historias anteriores" hidden><svg class="icono"><use href="#i-flecha-izquierda"/></svg></button>
+        <button class="historias__flecha historias__flecha--derecha" type="button" aria-label="Ver más historias" hidden><svg class="icono"><use href="#i-flecha-derecha"/></svg></button>
+      </section>
+
+
+      <!-- =================================================================
+           C. PUBLICACIONES
+           Para añadir otra, copia un <article> completo y cambia sus datos.
+           ================================================================= -->
+
+      <!-- Publicación 1 -->
+      <article class="post">
+        <header class="post__encabezado">
+          <a class="avatar avatar--anillo" href="#" aria-label="Historia de andes.trek"><img src="assets/imagenes/avatar-andes.jpg" alt="" width="32" height="32"></a>
+          <div class="post__autor">
+            <div class="post__linea">
+              <a class="post__usuario" href="#">andes.trek</a>
+              <svg class="verificado icono" role="img" aria-label="Verificado"><use href="#i-verificado"/></svg>
+              <span class="post__punto" aria-hidden="true">•</span>
+              <time class="post__tiempo" datetime="PT2H">2 h</time>
+            </div>
+            <a class="post__ubicacion" href="#">Cordillera Blanca, Perú</a>
+          </div>
+          <button class="boton-seguir" type="button" aria-pressed="false">Seguir</button>
+          <div class="desplegable">
+            <button class="boton-icono" type="button" data-menu aria-haspopup="menu" aria-expanded="false" aria-label="Más opciones"><svg class="icono"><use href="#i-opciones"/></svg></button>
+            <div class="emergente emergente--post" role="menu" hidden>
+              <button class="emergente__item emergente__item--peligro" type="button" role="menuitem">Reportar</button>
+              <button class="emergente__item" type="button" role="menuitem">No me interesa</button>
+              <button class="emergente__item" type="button" role="menuitem">Información sobre esta cuenta</button>
+              <button class="emergente__item" type="button" role="menuitem">Ir a la publicación</button>
+              <button class="emergente__item" type="button" role="menuitem">Compartir en...</button>
+              <button class="emergente__item" type="button" role="menuitem">Copiar enlace</button>
+              <button class="emergente__item" type="button" role="menuitem">Insertar</button>
+            </div>
+          </div>
+        </header>
+        <div class="post__media">
+          <img src="assets/imagenes/post-montanas.jpg" alt="Cordillera nevada entre nubes y valles con niebla al amanecer" width="1080" height="720">
+        </div>
+        <div class="post__cuerpo">
+          <div class="post__acciones">
+            <button class="accion accion--like" type="button" aria-pressed="false" aria-label="Me gusta"><svg class="icono"><use class="trazo" href="#i-corazon"/><use class="relleno" href="#i-corazon-activo"/></svg><span class="accion__cantidad" data-cantidad="8426">8426</span></button>
+            <button class="accion accion--comentar" type="button" aria-label="Comentar"><svg class="icono"><use href="#i-comentar"/></svg><span class="accion__cantidad" data-cantidad="126">126</span></button>
+            <button class="accion" type="button" aria-label="Repostear"><svg class="icono"><use href="#i-repostear"/></svg><span class="accion__cantidad">38</span></button>
+            <div class="desplegable">
+              <button class="accion" type="button" data-menu aria-haspopup="menu" aria-expanded="false" aria-label="Compartir"><svg class="icono"><use href="#i-mensajes"/></svg></button>
+              <div class="emergente emergente--compartir" role="menu" hidden>
+                <button class="emergente__item" type="button" role="menuitem">Enviar en un mensaje</button>
+                <button class="emergente__item" type="button" role="menuitem">Copiar enlace</button>
+                <button class="emergente__item" type="button" role="menuitem">Compartir en...</button>
+              </div>
+            </div>
+            <button class="accion accion--guardar" type="button" aria-pressed="false" aria-label="Guardar"><svg class="icono"><use class="trazo" href="#i-guardar"/><use class="relleno" href="#i-guardar-activo"/></svg></button>
+          </div>
+          <p class="post__leyenda"><a class="post__usuario" href="#">andes.trek</a> <svg class="verificado icono" role="img" aria-label="Verificado"><use href="#i-verificado"/></svg> El amanecer nos regaló este mar de nubes a 4700 metros. Tres días de caminata valieron cada paso.</p>
+          <a class="post__ver-comentarios" href="#">Ver los <span class="post__total-comentarios">126</span> comentarios</a>
+          <ul class="comentarios">
+            <li class="comentario"><p class="comentario__texto"><a class="post__usuario" href="#">mateo.viaja</a> Esa luz parece de otro planeta 😍</p><button class="comentario__like" type="button" aria-pressed="false" aria-label="Me gusta el comentario"><svg class="icono"><use class="trazo" href="#i-corazon"/><use class="relleno" href="#i-corazon-activo"/></svg></button></li>
+            <li class="comentario"><p class="comentario__texto"><a class="post__usuario" href="#">camila.corre</a> ¿Qué ruta hicieron? Quiero ir el próximo año</p><button class="comentario__like" type="button" aria-pressed="false" aria-label="Me gusta el comentario"><svg class="icono"><use class="trazo" href="#i-corazon"/><use class="relleno" href="#i-corazon-activo"/></svg></button></li>
+          </ul>
+          <form class="comentar" autocomplete="off">
+            <input class="comentar__campo" type="text" placeholder="Agrega un comentario..." aria-label="Agrega un comentario" maxlength="200">
+            <button class="comentar__enviar" type="submit" disabled>Publicar</button>
+          </form>
+        </div>
+      </article>
+
+      <!-- Publicación 2: leyenda larga con enlace "más" -->
+      <article class="post">
+        <header class="post__encabezado">
+          <a class="avatar avatar--anillo" href="#" aria-label="Historia de marina.azul"><img src="assets/imagenes/avatar-marina.jpg" alt="" width="32" height="32"></a>
+          <div class="post__autor">
+            <div class="post__linea">
+              <a class="post__usuario" href="#">marina.azul</a>
+              <span class="post__punto" aria-hidden="true">•</span>
+              <time class="post__tiempo" datetime="PT5H">5 h</time>
+            </div>
+            <a class="post__ubicacion" href="#">Máncora, Perú</a>
+          </div>
+          <button class="boton-seguir" type="button" aria-pressed="false">Seguir</button>
+          <div class="desplegable">
+            <button class="boton-icono" type="button" data-menu aria-haspopup="menu" aria-expanded="false" aria-label="Más opciones"><svg class="icono"><use href="#i-opciones"/></svg></button>
+            <div class="emergente emergente--post" role="menu" hidden>
+              <button class="emergente__item emergente__item--peligro" type="button" role="menuitem">Reportar</button>
+              <button class="emergente__item" type="button" role="menuitem">No me interesa</button>
+              <button class="emergente__item" type="button" role="menuitem">Información sobre esta cuenta</button>
+              <button class="emergente__item" type="button" role="menuitem">Ir a la publicación</button>
+              <button class="emergente__item" type="button" role="menuitem">Compartir en...</button>
+              <button class="emergente__item" type="button" role="menuitem">Copiar enlace</button>
+              <button class="emergente__item" type="button" role="menuitem">Insertar</button>
+            </div>
+          </div>
+        </header>
+        <div class="post__media">
+          <img src="assets/imagenes/post-mar.jpg" alt="Atardecer naranja y violeta sobre el mar, con rocas oscuras en primer plano" width="1080" height="1350" loading="lazy">
+        </div>
+        <div class="post__cuerpo">
+          <div class="post__acciones">
+            <button class="accion accion--like" type="button" aria-pressed="false" aria-label="Me gusta"><svg class="icono"><use class="trazo" href="#i-corazon"/><use class="relleno" href="#i-corazon-activo"/></svg><span class="accion__cantidad" data-cantidad="12431">12,4 mil</span></button>
+            <button class="accion accion--comentar" type="button" aria-label="Comentar"><svg class="icono"><use href="#i-comentar"/></svg><span class="accion__cantidad" data-cantidad="214">214</span></button>
+            <button class="accion" type="button" aria-label="Repostear"><svg class="icono"><use href="#i-repostear"/></svg><span class="accion__cantidad">57</span></button>
+            <div class="desplegable">
+              <button class="accion" type="button" data-menu aria-haspopup="menu" aria-expanded="false" aria-label="Compartir"><svg class="icono"><use href="#i-mensajes"/></svg></button>
+              <div class="emergente emergente--compartir" role="menu" hidden>
+                <button class="emergente__item" type="button" role="menuitem">Enviar en un mensaje</button>
+                <button class="emergente__item" type="button" role="menuitem">Copiar enlace</button>
+                <button class="emergente__item" type="button" role="menuitem">Compartir en...</button>
+              </div>
+            </div>
+            <button class="accion accion--guardar" type="button" aria-pressed="false" aria-label="Guardar"><svg class="icono"><use class="trazo" href="#i-guardar"/><use class="relleno" href="#i-guardar-activo"/></svg></button>
+          </div>
+          <p class="post__leyenda"><a class="post__usuario" href="#">marina.azul</a> Hay tardes que no necesitan filtro. Nos quedamos hasta que el sol tocó el agua<span class="post__recorte">... <button class="post__mas" type="button">más</button></span><span class="post__resto" hidden> y el mar se volvió rosado. Gracias a todos los que nos acompañaron en esta salida; la próxima será con más café y menos viento.</span></p>
+          <a class="post__ver-comentarios" href="#">Ver los <span class="post__total-comentarios">214</span> comentarios</a>
+          <ul class="comentarios">
+            <li class="comentario"><p class="comentario__texto"><a class="post__usuario" href="#">valeria.ruiz</a> Necesito estar ahí ahora mismo</p><button class="comentario__like" type="button" aria-pressed="false" aria-label="Me gusta el comentario"><svg class="icono"><use class="trazo" href="#i-corazon"/><use class="relleno" href="#i-corazon-activo"/></svg></button></li>
+          </ul>
+          <form class="comentar" autocomplete="off">
+            <input class="comentar__campo" type="text" placeholder="Agrega un comentario..." aria-label="Agrega un comentario" maxlength="200">
+            <button class="comentar__enviar" type="submit" disabled>Publicar</button>
+          </form>
+        </div>
+      </article>
+
+      <!-- Publicación 3 -->
+      <article class="post">
+        <header class="post__encabezado">
+          <a class="avatar" href="#" aria-label="Perfil de cafe.altura"><img src="assets/imagenes/avatar-cafe.jpg" alt="" width="32" height="32"></a>
+          <div class="post__autor">
+            <div class="post__linea">
+              <a class="post__usuario" href="#">cafe.altura</a>
+              <svg class="verificado icono" role="img" aria-label="Verificado"><use href="#i-verificado"/></svg>
+              <span class="post__punto" aria-hidden="true">•</span>
+              <time class="post__tiempo" datetime="PT8H">8 h</time>
+            </div>
+            <a class="post__ubicacion" href="#">Medellín, Colombia</a>
+          </div>
+          <button class="boton-seguir" type="button" aria-pressed="false">Seguir</button>
+          <div class="desplegable">
+            <button class="boton-icono" type="button" data-menu aria-haspopup="menu" aria-expanded="false" aria-label="Más opciones"><svg class="icono"><use href="#i-opciones"/></svg></button>
+            <div class="emergente emergente--post" role="menu" hidden>
+              <button class="emergente__item emergente__item--peligro" type="button" role="menuitem">Reportar</button>
+              <button class="emergente__item" type="button" role="menuitem">No me interesa</button>
+              <button class="emergente__item" type="button" role="menuitem">Información sobre esta cuenta</button>
+              <button class="emergente__item" type="button" role="menuitem">Ir a la publicación</button>
+              <button class="emergente__item" type="button" role="menuitem">Compartir en...</button>
+              <button class="emergente__item" type="button" role="menuitem">Copiar enlace</button>
+              <button class="emergente__item" type="button" role="menuitem">Insertar</button>
+            </div>
+          </div>
+        </header>
+        <div class="post__media">
+          <img src="assets/imagenes/post-cafe.jpg" alt="Taza de café con un corazón de leche, vista desde arriba sobre una mesa de madera" width="1080" height="1080" loading="lazy">
+        </div>
+        <div class="post__cuerpo">
+          <div class="post__acciones">
+            <button class="accion accion--like" type="button" aria-pressed="false" aria-label="Me gusta"><svg class="icono"><use class="trazo" href="#i-corazon"/><use class="relleno" href="#i-corazon-activo"/></svg><span class="accion__cantidad" data-cantidad="964">964</span></button>
+            <button class="accion accion--comentar" type="button" aria-label="Comentar"><svg class="icono"><use href="#i-comentar"/></svg><span class="accion__cantidad" data-cantidad="41">41</span></button>
+            <button class="accion" type="button" aria-label="Repostear"><svg class="icono"><use href="#i-repostear"/></svg><span class="accion__cantidad">6</span></button>
+            <div class="desplegable">
+              <button class="accion" type="button" data-menu aria-haspopup="menu" aria-expanded="false" aria-label="Compartir"><svg class="icono"><use href="#i-mensajes"/></svg></button>
+              <div class="emergente emergente--compartir" role="menu" hidden>
+                <button class="emergente__item" type="button" role="menuitem">Enviar en un mensaje</button>
+                <button class="emergente__item" type="button" role="menuitem">Copiar enlace</button>
+                <button class="emergente__item" type="button" role="menuitem">Compartir en...</button>
+              </div>
+            </div>
+            <button class="accion accion--guardar" type="button" aria-pressed="false" aria-label="Guardar"><svg class="icono"><use class="trazo" href="#i-guardar"/><use class="relleno" href="#i-guardar-activo"/></svg></button>
+          </div>
+          <p class="post__leyenda"><a class="post__usuario" href="#">cafe.altura</a> <svg class="verificado icono" role="img" aria-label="Verificado"><use href="#i-verificado"/></svg> Primer café del día: tueste medio de Antioquia, leche texturizada y cero apuro. ¿Cómo lo tomas tú?</p>
+          <a class="post__ver-comentarios" href="#">Ver los <span class="post__total-comentarios">41</span> comentarios</a>
+          <ul class="comentarios">
+            <li class="comentario"><p class="comentario__texto"><a class="post__usuario" href="#">tomas.dibuja</a> Yo primero lo dibujo y después me lo tomo frío ☕</p><button class="comentario__like" type="button" aria-pressed="false" aria-label="Me gusta el comentario"><svg class="icono"><use class="trazo" href="#i-corazon"/><use class="relleno" href="#i-corazon-activo"/></svg></button></li>
+            <li class="comentario"><p class="comentario__texto"><a class="post__usuario" href="#">valeria.ruiz</a> Con canela, siempre</p><button class="comentario__like" type="button" aria-pressed="false" aria-label="Me gusta el comentario"><svg class="icono"><use class="trazo" href="#i-corazon"/><use class="relleno" href="#i-corazon-activo"/></svg></button></li>
+          </ul>
+          <form class="comentar" autocomplete="off">
+            <input class="comentar__campo" type="text" placeholder="Agrega un comentario..." aria-label="Agrega un comentario" maxlength="200">
+            <button class="comentar__enviar" type="submit" disabled>Publicar</button>
+          </form>
+        </div>
+      </article>
+
+      <!-- Publicación 4: formato vídeo, con el encabezado sobre la imagen -->
+      <article class="post post--superpuesto">
+        <header class="post__encabezado">
+          <a class="avatar avatar--anillo" href="#" aria-label="Historia de noche.clara"><img src="assets/imagenes/avatar-noche.jpg" alt="" width="32" height="32"></a>
+          <div class="post__autor">
+            <div class="post__linea">
+              <a class="post__usuario" href="#">noche.clara</a>
+              <svg class="verificado icono" role="img" aria-label="Verificado"><use href="#i-verificado"/></svg>
+              <span class="post__punto" aria-hidden="true">•</span>
+              <time class="post__tiempo" datetime="P1D">1 d</time>
+            </div>
+            <a class="post__ubicacion" href="#">Audio original · Altiplano, Bolivia</a>
+          </div>
+          <button class="boton-seguir" type="button" aria-pressed="false">Seguir</button>
+          <div class="desplegable">
+            <button class="boton-icono" type="button" data-menu aria-haspopup="menu" aria-expanded="false" aria-label="Más opciones"><svg class="icono"><use href="#i-opciones"/></svg></button>
+            <div class="emergente emergente--post" role="menu" hidden>
+              <button class="emergente__item emergente__item--peligro" type="button" role="menuitem">Reportar</button>
+              <button class="emergente__item" type="button" role="menuitem">No me interesa</button>
+              <button class="emergente__item" type="button" role="menuitem">Información sobre esta cuenta</button>
+              <button class="emergente__item" type="button" role="menuitem">Ir a la publicación</button>
+              <button class="emergente__item" type="button" role="menuitem">Compartir en...</button>
+              <button class="emergente__item" type="button" role="menuitem">Copiar enlace</button>
+              <button class="emergente__item" type="button" role="menuitem">Insertar</button>
+            </div>
+          </div>
+        </header>
+        <div class="post__media">
+          <img src="assets/imagenes/post-noche.jpg" alt="Vía Láctea sobre montañas oscuras y una carpa iluminada" width="1080" height="608" loading="lazy">
+          <span class="post__silencio" role="img" aria-label="Audio silenciado"><svg class="icono"><use href="#i-silencio"/></svg></span>
+        </div>
+        <div class="post__cuerpo">
+          <div class="post__acciones">
+            <button class="accion accion--like" type="button" aria-pressed="false" aria-label="Me gusta"><svg class="icono"><use class="trazo" href="#i-corazon"/><use class="relleno" href="#i-corazon-activo"/></svg><span class="accion__cantidad" data-cantidad="153812">153,8 mil</span></button>
+            <button class="accion accion--comentar" type="button" aria-label="Comentar"><svg class="icono"><use href="#i-comentar"/></svg><span class="accion__cantidad" data-cantidad="130">130</span></button>
+            <button class="accion" type="button" aria-label="Repostear"><svg class="icono"><use href="#i-repostear"/></svg><span class="accion__cantidad">20 mil</span></button>
+            <div class="desplegable">
+              <button class="accion" type="button" data-menu aria-haspopup="menu" aria-expanded="false" aria-label="Compartir"><svg class="icono"><use href="#i-mensajes"/></svg></button>
+              <div class="emergente emergente--compartir" role="menu" hidden>
+                <button class="emergente__item" type="button" role="menuitem">Enviar en un mensaje</button>
+                <button class="emergente__item" type="button" role="menuitem">Copiar enlace</button>
+                <button class="emergente__item" type="button" role="menuitem">Compartir en...</button>
+              </div>
+            </div>
+            <button class="accion accion--guardar" type="button" aria-pressed="false" aria-label="Guardar"><svg class="icono"><use class="trazo" href="#i-guardar"/><use class="relleno" href="#i-guardar-activo"/></svg></button>
+          </div>
+          <p class="post__leyenda"><a class="post__usuario" href="#">noche.clara</a> <svg class="verificado icono" role="img" aria-label="Verificado"><use href="#i-verificado"/></svg> Tres de la mañana, diez grados bajo cero y la Vía Láctea encima de la carpa.</p>
+          <a class="post__ver-comentarios" href="#">Ver los <span class="post__total-comentarios">130</span> comentarios</a>
+          <ul class="comentarios">
+            <li class="comentario"><p class="comentario__texto"><a class="post__usuario" href="#">nico_foto</a> ¿Cuánto tiempo de exposición usaste?</p><button class="comentario__like" type="button" aria-pressed="false" aria-label="Me gusta el comentario"><svg class="icono"><use class="trazo" href="#i-corazon"/><use class="relleno" href="#i-corazon-activo"/></svg></button></li>
+          </ul>
+          <form class="comentar" autocomplete="off">
+            <input class="comentar__campo" type="text" placeholder="Agrega un comentario..." aria-label="Agrega un comentario" maxlength="200">
+            <button class="comentar__enviar" type="submit" disabled>Publicar</button>
+          </form>
+        </div>
+      </article>
+
+      <!-- Publicación 5 -->
+      <article class="post">
+        <header class="post__encabezado">
+          <a class="avatar avatar--anillo" href="#" aria-label="Historia de dunas_y_sal"><img src="assets/imagenes/avatar-dunas.jpg" alt="" width="32" height="32"></a>
+          <div class="post__autor">
+            <div class="post__linea">
+              <a class="post__usuario" href="#">dunas_y_sal</a>
+              <span class="post__punto" aria-hidden="true">•</span>
+              <time class="post__tiempo" datetime="P2D">2 d</time>
+            </div>
+            <a class="post__ubicacion" href="#">Huacachina, Perú</a>
+          </div>
+          <button class="boton-seguir" type="button" aria-pressed="false">Seguir</button>
+          <div class="desplegable">
+            <button class="boton-icono" type="button" data-menu aria-haspopup="menu" aria-expanded="false" aria-label="Más opciones"><svg class="icono"><use href="#i-opciones"/></svg></button>
+            <div class="emergente emergente--post" role="menu" hidden>
+              <button class="emergente__item emergente__item--peligro" type="button" role="menuitem">Reportar</button>
+              <button class="emergente__item" type="button" role="menuitem">No me interesa</button>
+              <button class="emergente__item" type="button" role="menuitem">Información sobre esta cuenta</button>
+              <button class="emergente__item" type="button" role="menuitem">Ir a la publicación</button>
+              <button class="emergente__item" type="button" role="menuitem">Compartir en...</button>
+              <button class="emergente__item" type="button" role="menuitem">Copiar enlace</button>
+              <button class="emergente__item" type="button" role="menuitem">Insertar</button>
+            </div>
+          </div>
+        </header>
+        <div class="post__media">
+          <img src="assets/imagenes/post-dunas.jpg" alt="Dunas doradas con largas sombras bajo un cielo azul profundo" width="1080" height="1350" loading="lazy">
+        </div>
+        <div class="post__cuerpo">
+          <div class="post__acciones">
+            <button class="accion accion--like" type="button" aria-pressed="false" aria-label="Me gusta"><svg class="icono"><use class="trazo" href="#i-corazon"/><use class="relleno" href="#i-corazon-activo"/></svg><span class="accion__cantidad" data-cantidad="5217">5217</span></button>
+            <button class="accion accion--comentar" type="button" aria-label="Comentar"><svg class="icono"><use href="#i-comentar"/></svg><span class="accion__cantidad" data-cantidad="88">88</span></button>
+            <button class="accion" type="button" aria-label="Repostear"><svg class="icono"><use href="#i-repostear"/></svg><span class="accion__cantidad">14</span></button>
+            <div class="desplegable">
+              <button class="accion" type="button" data-menu aria-haspopup="menu" aria-expanded="false" aria-label="Compartir"><svg class="icono"><use href="#i-mensajes"/></svg></button>
+              <div class="emergente emergente--compartir" role="menu" hidden>
+                <button class="emergente__item" type="button" role="menuitem">Enviar en un mensaje</button>
+                <button class="emergente__item" type="button" role="menuitem">Copiar enlace</button>
+                <button class="emergente__item" type="button" role="menuitem">Compartir en...</button>
+              </div>
+            </div>
+            <button class="accion accion--guardar" type="button" aria-pressed="false" aria-label="Guardar"><svg class="icono"><use class="trazo" href="#i-guardar"/><use class="relleno" href="#i-guardar-activo"/></svg></button>
+          </div>
+          <p class="post__leyenda"><a class="post__usuario" href="#">dunas_y_sal</a> A la hora dorada el viento dibuja líneas nuevas en cada cresta.</p>
+          <a class="post__ver-comentarios" href="#">Ver los <span class="post__total-comentarios">88</span> comentarios</a>
+          <ul class="comentarios">
+            <li class="comentario"><p class="comentario__texto"><a class="post__usuario" href="#">mateo.viaja</a> Agregado a la lista de este verano</p><button class="comentario__like" type="button" aria-pressed="false" aria-label="Me gusta el comentario"><svg class="icono"><use class="trazo" href="#i-corazon"/><use class="relleno" href="#i-corazon-activo"/></svg></button></li>
+          </ul>
+          <form class="comentar" autocomplete="off">
+            <input class="comentar__campo" type="text" placeholder="Agrega un comentario..." aria-label="Agrega un comentario" maxlength="200">
+            <button class="comentar__enviar" type="submit" disabled>Publicar</button>
+          </form>
+        </div>
+      </article>
+
+      <!-- Publicación 6 -->
+      <article class="post">
+        <header class="post__encabezado">
+          <a class="avatar" href="#" aria-label="Perfil de bosque.lento"><img src="assets/imagenes/avatar-bosque.jpg" alt="" width="32" height="32"></a>
+          <div class="post__autor">
+            <div class="post__linea">
+              <a class="post__usuario" href="#">bosque.lento</a>
+              <span class="post__punto" aria-hidden="true">•</span>
+              <time class="post__tiempo" datetime="P3D">3 d</time>
+            </div>
+            <a class="post__ubicacion" href="#">Parque Nacional Los Alerces, Argentina</a>
+          </div>
+          <button class="boton-seguir" type="button" aria-pressed="false">Seguir</button>
+          <div class="desplegable">
+            <button class="boton-icono" type="button" data-menu aria-haspopup="menu" aria-expanded="false" aria-label="Más opciones"><svg class="icono"><use href="#i-opciones"/></svg></button>
+            <div class="emergente emergente--post" role="menu" hidden>
+              <button class="emergente__item emergente__item--peligro" type="button" role="menuitem">Reportar</button>
+              <button class="emergente__item" type="button" role="menuitem">No me interesa</button>
+              <button class="emergente__item" type="button" role="menuitem">Información sobre esta cuenta</button>
+              <button class="emergente__item" type="button" role="menuitem">Ir a la publicación</button>
+              <button class="emergente__item" type="button" role="menuitem">Compartir en...</button>
+              <button class="emergente__item" type="button" role="menuitem">Copiar enlace</button>
+              <button class="emergente__item" type="button" role="menuitem">Insertar</button>
+            </div>
+          </div>
+        </header>
+        <div class="post__media">
+          <img src="assets/imagenes/post-bosque.jpg" alt="Cerros cubiertos de pinos entre capas de niebla" width="1080" height="1350" loading="lazy">
+        </div>
+        <div class="post__cuerpo">
+          <div class="post__acciones">
+            <button class="accion accion--like" type="button" aria-pressed="false" aria-label="Me gusta"><svg class="icono"><use class="trazo" href="#i-corazon"/><use class="relleno" href="#i-corazon-activo"/></svg><span class="accion__cantidad" data-cantidad="2749">2749</span></button>
+            <button class="accion accion--comentar" type="button" aria-label="Comentar"><svg class="icono"><use href="#i-comentar"/></svg><span class="accion__cantidad" data-cantidad="63">63</span></button>
+            <button class="accion" type="button" aria-label="Repostear"><svg class="icono"><use href="#i-repostear"/></svg><span class="accion__cantidad">9</span></button>
+            <div class="desplegable">
+              <button class="accion" type="button" data-menu aria-haspopup="menu" aria-expanded="false" aria-label="Compartir"><svg class="icono"><use href="#i-mensajes"/></svg></button>
+              <div class="emergente emergente--compartir" role="menu" hidden>
+                <button class="emergente__item" type="button" role="menuitem">Enviar en un mensaje</button>
+                <button class="emergente__item" type="button" role="menuitem">Copiar enlace</button>
+                <button class="emergente__item" type="button" role="menuitem">Compartir en...</button>
+              </div>
+            </div>
+            <button class="accion accion--guardar" type="button" aria-pressed="false" aria-label="Guardar"><svg class="icono"><use class="trazo" href="#i-guardar"/><use class="relleno" href="#i-guardar-activo"/></svg></button>
+          </div>
+          <p class="post__leyenda"><a class="post__usuario" href="#">bosque.lento</a> Caminar despacio también es llegar. La niebla se fue recién al mediodía.</p>
+          <a class="post__ver-comentarios" href="#">Ver los <span class="post__total-comentarios">63</span> comentarios</a>
+          <ul class="comentarios">
+            <li class="comentario"><p class="comentario__texto"><a class="post__usuario" href="#">camila.corre</a> Qué lugar para un trote de domingo</p><button class="comentario__like" type="button" aria-pressed="false" aria-label="Me gusta el comentario"><svg class="icono"><use class="trazo" href="#i-corazon"/><use class="relleno" href="#i-corazon-activo"/></svg></button></li>
+          </ul>
+          <form class="comentar" autocomplete="off">
+            <input class="comentar__campo" type="text" placeholder="Agrega un comentario..." aria-label="Agrega un comentario" maxlength="200">
+            <button class="comentar__enviar" type="submit" disabled>Publicar</button>
+          </form>
+        </div>
+      </article>
+
+      <!-- Publicación 7 -->
+      <article class="post">
+        <header class="post__encabezado">
+          <a class="avatar" href="#" aria-label="Perfil de lluvia.urbana"><img src="assets/imagenes/avatar-lluvia.jpg" alt="" width="32" height="32"></a>
+          <div class="post__autor">
+            <div class="post__linea">
+              <a class="post__usuario" href="#">lluvia.urbana</a>
+              <span class="post__punto" aria-hidden="true">•</span>
+              <time class="post__tiempo" datetime="P4D">4 d</time>
+            </div>
+            <a class="post__ubicacion" href="#">Buenos Aires, Argentina</a>
+          </div>
+          <button class="boton-seguir" type="button" aria-pressed="false">Seguir</button>
+          <div class="desplegable">
+            <button class="boton-icono" type="button" data-menu aria-haspopup="menu" aria-expanded="false" aria-label="Más opciones"><svg class="icono"><use href="#i-opciones"/></svg></button>
+            <div class="emergente emergente--post" role="menu" hidden>
+              <button class="emergente__item emergente__item--peligro" type="button" role="menuitem">Reportar</button>
+              <button class="emergente__item" type="button" role="menuitem">No me interesa</button>
+              <button class="emergente__item" type="button" role="menuitem">Información sobre esta cuenta</button>
+              <button class="emergente__item" type="button" role="menuitem">Ir a la publicación</button>
+              <button class="emergente__item" type="button" role="menuitem">Compartir en...</button>
+              <button class="emergente__item" type="button" role="menuitem">Copiar enlace</button>
+              <button class="emergente__item" type="button" role="menuitem">Insertar</button>
+            </div>
+          </div>
+        </header>
+        <div class="post__media">
+          <img src="assets/imagenes/post-lluvia.jpg" alt="Persona con paraguas en una calle mojada de noche, con luces desenfocadas de fondo" width="1080" height="720" loading="lazy">
+        </div>
+        <div class="post__cuerpo">
+          <div class="post__acciones">
+            <button class="accion accion--like" type="button" aria-pressed="false" aria-label="Me gusta"><svg class="icono"><use class="trazo" href="#i-corazon"/><use class="relleno" href="#i-corazon-activo"/></svg><span class="accion__cantidad" data-cantidad="1408">1408</span></button>
+            <button class="accion accion--comentar" type="button" aria-label="Comentar"><svg class="icono"><use href="#i-comentar"/></svg><span class="accion__cantidad" data-cantidad="27">27</span></button>
+            <button class="accion" type="button" aria-label="Repostear"><svg class="icono"><use href="#i-repostear"/></svg><span class="accion__cantidad">3</span></button>
+            <div class="desplegable">
+              <button class="accion" type="button" data-menu aria-haspopup="menu" aria-expanded="false" aria-label="Compartir"><svg class="icono"><use href="#i-mensajes"/></svg></button>
+              <div class="emergente emergente--compartir" role="menu" hidden>
+                <button class="emergente__item" type="button" role="menuitem">Enviar en un mensaje</button>
+                <button class="emergente__item" type="button" role="menuitem">Copiar enlace</button>
+                <button class="emergente__item" type="button" role="menuitem">Compartir en...</button>
+              </div>
+            </div>
+            <button class="accion accion--guardar" type="button" aria-pressed="false" aria-label="Guardar"><svg class="icono"><use class="trazo" href="#i-guardar"/><use class="relleno" href="#i-guardar-activo"/></svg></button>
+          </div>
+          <p class="post__leyenda"><a class="post__usuario" href="#">lluvia.urbana</a> La ciudad se ve mejor reflejada en los charcos.</p>
+          <a class="post__ver-comentarios" href="#">Ver los <span class="post__total-comentarios">27</span> comentarios</a>
+          <ul class="comentarios">
+            <li class="comentario"><p class="comentario__texto"><a class="post__usuario" href="#">nico_foto</a> Esas luces de fondo están increíbles</p><button class="comentario__like" type="button" aria-pressed="false" aria-label="Me gusta el comentario"><svg class="icono"><use class="trazo" href="#i-corazon"/><use class="relleno" href="#i-corazon-activo"/></svg></button></li>
+          </ul>
+          <form class="comentar" autocomplete="off">
+            <input class="comentar__campo" type="text" placeholder="Agrega un comentario..." aria-label="Agrega un comentario" maxlength="200">
+            <button class="comentar__enviar" type="submit" disabled>Publicar</button>
+          </form>
+        </div>
+      </article>
+
+    </div>
+
+
+    <!-- =====================================================================
+         D. PANEL DERECHO
+         ===================================================================== -->
+    <aside class="panel" aria-label="Tu cuenta y sugerencias">
+      <div class="panel__cuenta">
+        <a class="avatar avatar--44" href="#" aria-label="Perfil de sofia.rivas"><img src="assets/imagenes/avatar-sofia.jpg" alt="" width="44" height="44"></a>
+        <div class="panel__datos">
+          <a class="panel__usuario" href="#">sofia.rivas</a>
+          <span class="panel__nombre">Sofía Rivas</span>
+        </div>
+        <a class="panel__cambiar" href="#">Cambiar</a>
+      </div>
+
+      <div class="panel__titulo">
+        <h2>Sugerencias para ti</h2>
+        <a href="#">Ver todos</a>
+      </div>
+
+      <ul class="sugerencias">
+        <li class="sugerencia">
+          <a class="avatar avatar--44" href="#" aria-label="Perfil de flor.de.mayo"><img src="assets/imagenes/avatar-flor.jpg" alt="" width="44" height="44"></a>
+          <div class="panel__datos">
+            <div class="sugerencia__linea"><a class="panel__usuario" href="#">flor.de.mayo</a> <svg class="verificado icono" role="img" aria-label="Verificado"><use href="#i-verificado"/></svg></div>
+            <span class="sugerencia__motivo">Popular</span>
+          </div>
+          <button class="sugerencia__seguir" type="button" aria-pressed="false">Seguir</button>
+        </li>
+        <li class="sugerencia">
+          <a class="avatar avatar--44" href="#" aria-label="Perfil de citrico.studio"><img src="assets/imagenes/avatar-citrico.jpg" alt="" width="44" height="44"></a>
+          <div class="panel__datos">
+            <div class="sugerencia__linea"><a class="panel__usuario" href="#">citrico.studio</a></div>
+            <span class="sugerencia__motivo">Popular</span>
+          </div>
+          <button class="sugerencia__seguir" type="button" aria-pressed="false">Seguir</button>
+        </li>
+        <li class="sugerencia">
+          <a class="avatar avatar--44" href="#" aria-label="Perfil de taller.barro"><img src="assets/imagenes/avatar-ceramica.jpg" alt="" width="44" height="44"></a>
+          <div class="panel__datos">
+            <div class="sugerencia__linea"><a class="panel__usuario" href="#">taller.barro</a> <svg class="verificado icono" role="img" aria-label="Verificado"><use href="#i-verificado"/></svg></div>
+            <span class="sugerencia__motivo">Popular</span>
+          </div>
+          <button class="sugerencia__seguir" type="button" aria-pressed="false">Seguir</button>
+        </li>
+        <li class="sugerencia">
+          <a class="avatar avatar--44" href="#" aria-label="Perfil de lucia.mora"><img src="assets/imagenes/avatar-lucia.jpg" alt="" width="44" height="44"></a>
+          <div class="panel__datos">
+            <div class="sugerencia__linea"><a class="panel__usuario" href="#">lucia.mora</a></div>
+            <span class="sugerencia__motivo">Popular</span>
+          </div>
+          <button class="sugerencia__seguir" type="button" aria-pressed="false">Seguir</button>
+        </li>
+        <li class="sugerencia">
+          <a class="avatar avatar--44" href="#" aria-label="Perfil de andres.huerta"><img src="assets/imagenes/avatar-andres.jpg" alt="" width="44" height="44"></a>
+          <div class="panel__datos">
+            <div class="sugerencia__linea"><a class="panel__usuario" href="#">andres.huerta</a> <svg class="verificado icono" role="img" aria-label="Verificado"><use href="#i-verificado"/></svg></div>
+            <span class="sugerencia__motivo">Popular</span>
+          </div>
+          <button class="sugerencia__seguir" type="button" aria-pressed="false">Seguir</button>
+        </li>
+      </ul>
+
+      <footer class="panel__pie">
+        <nav aria-label="Información">
+          <a href="#">Información</a> ·
+          <a href="#">Ayuda</a> ·
+          <a href="#">Prensa</a> ·
+          <a href="#">API</a> ·
+          <a href="#">Empleo</a> ·
+          <a href="#">Privacidad</a> ·
+          <a href="#">Condiciones</a> ·
+          <a href="#">Ubicaciones</a> ·
+          <a href="#">Idioma</a>
+        </nav>
+        <p>© 2026 ÓRBITA · RED SOCIAL DE DEMOSTRACIÓN</p>
+      </footer>
+    </aside>
+  </main>
+
+
+  <!-- Acceso flotante a mensajes (solo visual) -->
+  <button class="pildora-mensajes" type="button">
+    <svg class="icono"><use href="#i-mensajes"/></svg>
+    <span>Mensajes</span>
+  </button>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
